@@ -7,7 +7,9 @@ import Presenter.Presenter;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public class ConsoleUi implements View {
+public class ConsoleUi implements View { //todo попробовать добавить возможность сохранения добавленных записей,
+    // todo сейчас после добавления и перезапуска человек не сохраняется и возможно прикрутить сортировки
+    //todo навести порядок в коде, в части читаемости, перекидать методы
     private Presenter presenter;
     private Scanner scanner;
     private boolean flag;
@@ -69,11 +71,13 @@ public class ConsoleUi implements View {
 
     @Override
     public void addHuman() {
-        Human father = setFather();
+        Human father = setFather(); //todo прикрутить проверку на наличие цифр в введенной строке и возможно сделать ввод только русских имен, но это адаптивно
         Human mother = setMother();
         String name = setName();
-        Gender gender = setGender();
+        Gender gender = setGender(); //todo сделать проверку на ввод 1 символа (м/ж)
+        System.out.println("Введите дату рождения(yyyy,MM,dd): "); //todo сделать проверку на ввод цифр и
         LocalDate birthday = setDay();
+        System.out.println("Введите дату смерти(yyyy,MM,dd): ");
         LocalDate deathday = setDay();
 
         presenter.addHuman(father, mother, name, gender, birthday, deathday);
@@ -81,7 +85,7 @@ public class ConsoleUi implements View {
     }
 
     private LocalDate setDay() {
-        System.out.println("Введите дату рождения(yyyy,MM,dd): ");
+        //System.out.println("Введите дату рождения(yyyy,MM,dd): ");
         String yearBirthday = scanner.nextLine();
         String monBirthday = scanner.nextLine();
         String dayBirthday = scanner.nextLine();
@@ -124,7 +128,7 @@ public class ConsoleUi implements View {
 
     @Override
     public void getInfoTree() {
-        presenter.getInfo();
+        System.out.println(presenter.getInfo());
     }
 
     @Override
