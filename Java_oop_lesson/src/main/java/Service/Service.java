@@ -35,6 +35,7 @@ public class Service {
 
     public void addHuman(Human father, Human mother, String name, Gender gender, LocalDate birthDay, LocalDate deathDay) {
         activeTree.addHuman(new Human(father, mother, name, gender, birthDay, deathDay));
+
     }
 
     public void addHuman(String name, Gender gender, LocalDate birthDay, LocalDate deathDay) {
