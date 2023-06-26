@@ -8,6 +8,7 @@ import model.human.Human;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,12 @@ public class Service {
     public void addHuman(Human father, Human mother, String name, Gender gender, LocalDate birthDay, LocalDate deathDay) {
         activeTree.addHuman(new Human(father, mother, name, gender, birthDay, deathDay));
 
+    }
+    public void test(){
+        activeTree.addHuman(new Human("Владимир", Gender.male, LocalDate.of(1990, Month.OCTOBER, 12), LocalDate.of(2060, Month.FEBRUARY,20)));
+        activeTree.addHuman(new Human("Ольга",Gender.female, LocalDate.of(1988, Month.AUGUST, 25)));
+        activeTree.addHuman(new Human(getName("Владимир"), getName("Ольга"), "Стас",Gender.male, LocalDate.of(2000, Month.APRIL,15)));
+        activeTree.addHuman(new Human(getName("Владимир"), getName("Ольга"), "Екатерина",Gender.female, LocalDate.of(2003,Month.DECEMBER,20)));
     }
 
     public void addHuman(String name, Gender gender, LocalDate birthDay, LocalDate deathDay) {
