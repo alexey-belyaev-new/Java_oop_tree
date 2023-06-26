@@ -66,12 +66,28 @@ public class Human implements Serializable, Animal {
         sb.append(", ");
         sb.append(getStringAge());
         sb.append(", ");
+        sb.append(getGenderInfo());
+        sb.append(", ");
         sb.append(getMotherInfo());
         sb.append(", ");
         sb.append(getFatherInfo());
         sb.append(", ");
         sb.append(getChildInfo());
         return sb.toString();
+    }
+
+    private String getGenderInfo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("пол: ");
+        if(getGender() == Gender.female){
+            sb.append("женский");
+        }else if(getGender() == Gender.male) {
+            sb.append("мужской");
+        }
+        return sb.toString();
+    }
+    private Gender getGender(){
+        return gender;
     }
 
     public String getMotherInfo() {

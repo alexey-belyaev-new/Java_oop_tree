@@ -4,12 +4,13 @@ import model.human.Gender;
 import model.human.Human;
 import presenter.Presenter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public class ConsoleUi implements View { //todo попробовать добавить возможность сохранения добавленных записей,
-    // todo сейчас после добавления и перезапуска человек не сохраняется и возможно прикрутить сортировки
-    //todo навести порядок в коде, в части читаемости, перекидать методы
+public class ConsoleUi implements View {
+    private final String ERROR = "Введено некорректное значение. Повторите ввод.";
     private Presenter presenter;
     private Scanner scanner;
     private boolean flag;
@@ -33,7 +34,7 @@ public class ConsoleUi implements View { //todo попробовать доба�
 
 
     @Override
-    public void start() {
+    public void start() throws IOException, ClassNotFoundException {
         System.out.println("Приветствие");
         while (flag) {
             System.out.println(mainMenu.print());
@@ -41,7 +42,7 @@ public class ConsoleUi implements View { //todo попробовать доба�
         }
     }
 
-    private void execute() {
+    private void execute() throws IOException, ClassNotFoundException {
         String num = scanner.nextLine();
         if (checkNum(num)) {
             int numCommand = Integer.parseInt(num);
@@ -61,7 +62,9 @@ public class ConsoleUi implements View { //todo попробовать доба�
     }
 
     private boolean checkNum(String num) {
-        if (!num.matches("[0-9]+")) {
+        if (num.equalsIgnoreCase("-")) {
+            return false;
+        } else if (!num.matches("[0-9]+")) {
             System.out.println("Ошибка ввода");
             return false;
         } else {
@@ -71,51 +74,15 @@ public class ConsoleUi implements View { //todo попробовать доба�
 
     @Override
     public void addHuman() {
-        Human father = setFather(); //todo прикрутить проверку на наличие цифр в введенной строке и возможно сделать ввод только русских имен, но это адаптивно
+        Human father = setFather();
         Human mother = setMother();
         String name = setName();
-        Gender gender = setGender(); //todo сделать проверку на ввод 1 символа (м/ж)
-        System.out.println("Введите дату рождения(yyyy,MM,dd): "); //todo сделать проверку на ввод цифр и
-        LocalDate birthday = setDay();
-        System.out.println("Введите дату смерти(yyyy,MM,dd): ");
-        LocalDate deathday = setDay();
+        Gender gender = setGender();
+        LocalDate birthday = setBirthday();
+        LocalDate deathday = setDeathday();
 
         presenter.addHuman(father, mother, name, gender, birthday, deathday);
 
-    }
-
-    private LocalDate setDay() {
-        //System.out.println("Введите дату рождения(yyyy,MM,dd): ");
-        String yearBirthday = scanner.nextLine();
-        String monBirthday = scanner.nextLine();
-        String dayBirthday = scanner.nextLine();
-        if (checkNum(yearBirthday) || checkNum(monBirthday) || checkNum(dayBirthday)) {
-            return LocalDate.of(Integer.parseInt(yearBirthday), Integer.parseInt(monBirthday), Integer.parseInt(dayBirthday));
-        }
-        return LocalDate.of(0, 0, 0);
-    }
-
-    private Gender setGender() {
-        System.out.println("Введите пол(м/ж): ");
-        String gender = scanner.nextLine();
-        return checkGender(gender);
-    }
-
-    private String setName() {
-        System.out.println("Введите имя: ");
-        return scanner.nextLine();
-    }
-
-    private Human setMother() {
-        System.out.println("Введите имя матери: ");
-        String nameMother = scanner.nextLine();
-        return presenter.getName(nameMother);
-    }
-
-    private Human setFather() {
-        System.out.println("Введите имя отца: ");
-        String nameFather = scanner.nextLine();
-        return presenter.getName(nameFather);
     }
 
 
@@ -132,25 +99,122 @@ public class ConsoleUi implements View { //todo попробовать доба�
     }
 
     @Override
+    public void saveTree() throws IOException {
+        System.out.println("Введите имя файла: ");
+        String saveName = scanner.nextLine();
+        String saveStr = saveName + ".out";
+        presenter.saveTree(saveStr);
+        System.out.println("Запись сохранена.");
+    }
+
+    @Override
+    public void loadTree() throws IOException, ClassNotFoundException {
+        System.out.println("Введите имя файла: ");
+        boolean flag = false;
+        String saveName = scanner.nextLine();
+        String saveStr = saveName + ".out";
+        try {
+            presenter.loadTree(saveStr);
+        } catch (FileNotFoundException exception) {
+            System.out.println("Файл не найден");
+            flag = true;
+        }
+        if (!flag) {
+            System.out.println("Запись загружена.");
+        }
+    }
+
+    @Override
     public void finish() {
         System.out.println("Работа закончена.");
         flag = false;
     }
 
+    @Override
+    public void test() {
+        presenter.test();
+    }
+
+    private LocalDate setBirthday() {
+        System.out.println("Введите дату рождения(yyyy,MM,dd): ");
+        System.out.println("Введите год(yyyy): ");
+        String yearBirthday = scanner.nextLine();
+        System.out.println("Введите месяц(MM): ");
+        String monBirthday = scanner.nextLine();
+        System.out.println("Введите день(dd): ");
+        String dayBirthday = scanner.nextLine();
+        if (checkNum(yearBirthday) && checkNum(monBirthday) && checkNum(dayBirthday)) {
+            return LocalDate.of(Integer.parseInt(yearBirthday), Integer.parseInt(monBirthday), Integer.parseInt(dayBirthday));
+        } else {
+            ErrorInput();
+            return setBirthday();
+        }
+    }
+
+    private LocalDate setDeathday() {
+        System.out.println("Введите дату смерти: ");
+        System.out.println("Введите год(yyyy): ");
+        String yearBirthday = scanner.nextLine();
+        System.out.println("Введите месяц(MM): ");
+        String monBirthday = scanner.nextLine();
+        System.out.println("Введите день(dd): ");
+        String dayBirthday = scanner.nextLine();
+        if (checkNum(yearBirthday) && checkNum(monBirthday) && checkNum(dayBirthday)) {
+            return LocalDate.of(Integer.parseInt(yearBirthday), Integer.parseInt(monBirthday), Integer.parseInt(dayBirthday));
+        } else if (yearBirthday.equalsIgnoreCase("-") && monBirthday.equalsIgnoreCase("-") && dayBirthday.equalsIgnoreCase("-")) {
+            return null;
+        } else {
+            ErrorInput();
+            return setDeathday();
+        }
+    }
+
+
+    private Gender setGender() {
+        System.out.println("Введите пол(м/ж): ");
+        String gender = scanner.nextLine();
+        return checkGender(gender);
+    }
+
+    private String setName() {
+        System.out.println("Введите имя человека: ");
+        return scanner.nextLine();
+    }
+
+    private Human setMother() {
+        System.out.println("Введите имя матери: ");
+        String nameMother = scanner.nextLine();
+        return presenter.getName(nameMother);
+    }
+
+    private Human setFather() {
+        System.out.println("Введите имя отца: ");
+        String nameFather = scanner.nextLine();
+        checkName(nameFather);
+        return presenter.getName(nameFather);
+    }
+
     private boolean checkName(String name) {
-        if (name.matches("[а-яА-я]+")) {
+        if (name.matches("[а-яА-я]+") && name.matches("[0-9]+")) {
+            ErrorInput();
             return true;
         }
         return false;
     }
 
     private Gender checkGender(String gender) {
-        Gender gen = Gender.empty;
         if (gender.equalsIgnoreCase("м")) {
-            return gen = Gender.male;
+            return Gender.male;
         } else if (gender.equalsIgnoreCase("ж")) {
-            return gen = Gender.female;
+            return Gender.female;
+        } else {
+            ErrorInput();
+            return setGender();
         }
-        return gen;
     }
+
+    private void ErrorInput() {
+        System.out.println(ERROR);
+    }
+
 }

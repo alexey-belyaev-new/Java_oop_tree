@@ -2,6 +2,7 @@ package view;
 
 import view.command.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,8 @@ public class MainMenu {
         commandList.add(new AddHuman(view));
         commandList.add(new FindHuman(view));
         commandList.add(new GetInfoTree(view));
+        commandList.add(new SaveTree(view));
+        commandList.add(new LoadTree(view));
         commandList.add(new Finish(view));
 
     }
@@ -28,7 +31,7 @@ public class MainMenu {
         }
         return stringBuilder.toString();
     }
-    public void execute(int numCommand){
+    public void execute(int numCommand) throws IOException, ClassNotFoundException {
         commandList.get(numCommand -1 ).execute();
     }
 
