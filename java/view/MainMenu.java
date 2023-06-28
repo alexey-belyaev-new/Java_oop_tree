@@ -18,6 +18,8 @@ public class MainMenu {
         commandList.add(new GetInfoTree(view));
         commandList.add(new SaveTree(view));
         commandList.add(new LoadTree(view));
+        commandList.add(new SortByAge(view));
+        commandList.add(new SortByName(view));
         commandList.add(new Finish(view));
 
     }

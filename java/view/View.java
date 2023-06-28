@@ -13,6 +13,8 @@ public interface View {
     void getInfoTree();
     void saveTree() throws IOException;
     void loadTree() throws IOException, ClassNotFoundException;
+    void sortByName();
+    void sortByAge();
     void finish();
     void test();
 }

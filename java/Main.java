@@ -9,7 +9,7 @@ public class Main {
         View view = new ConsoleUi();
         Service service = new Service();
         new Presenter(view,service);
-        //view.test();
+        view.test();
         view.start();
     }
 }
