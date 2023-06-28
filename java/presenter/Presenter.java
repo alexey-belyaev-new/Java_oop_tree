@@ -42,6 +42,12 @@ public class Presenter {
     public void loadTree(String loadName) throws IOException, ClassNotFoundException {
         service.loadFile(loadName);
     }
+    public void sortByName(){
+        service.sortByName();
+    }
+    public void sortByAge(){
+        service.sortByAge();
+    }
     public void test(){
         service.test();
     }

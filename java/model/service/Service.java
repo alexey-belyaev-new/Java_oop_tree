@@ -9,31 +9,19 @@ import model.human.Human;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Service {
     private Tree<Human> activeTree;
-    private List<Tree> treeList;
-    private FileHandlerInterface fileHandlerTree;
+    private final FileHandlerInterface fileHandlerTree;
 
     public Service(Tree<Human> activeTree, FileHandlerTree file) {
         this.activeTree = activeTree;
         this.fileHandlerTree = file;
-        treeList = new ArrayList<>();
 
     }
 
     public Service() {
         this(new Tree<>(), new FileHandlerTree());
-    }
-
-    public void addTree(Tree<Human> tree) {
-        treeList.add(tree);
-    }
-
-    public void addHuman(Human father, Human mother, String name, Gender gender, LocalDate birthDay) {
-        activeTree.addHuman(new Human(father, mother, name, gender, birthDay));
     }
 
     public void addHuman(Human father, Human mother, String name, Gender gender, LocalDate birthDay, LocalDate deathDay) {
@@ -47,13 +35,6 @@ public class Service {
         activeTree.addHuman(new Human(getName("Владимир"), getName("Ольга"), "Екатерина",Gender.female, LocalDate.of(2003,Month.DECEMBER,20)));
     }
 
-    public void addHuman(String name, Gender gender, LocalDate birthDay, LocalDate deathDay) {
-        activeTree.addHuman(new Human(name, gender, birthDay, deathDay));
-    }
-
-    public void addHuman(String name, Gender gender, LocalDate birthDay) {
-        activeTree.addHuman(new Human(name, gender, birthDay));
-    }
 
     public Human getName(String str) {
         return activeTree.getName(str);
@@ -72,7 +53,8 @@ public class Service {
     }
 
     public void loadFile(String str) throws IOException, ClassNotFoundException {
-        fileHandlerTree.loadFile(str);
+        activeTree = (Tree<Human>) fileHandlerTree.loadFile(str);
+
     }
 
     public void sortByName() {

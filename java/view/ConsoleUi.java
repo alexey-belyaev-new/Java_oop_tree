@@ -125,6 +125,20 @@ public class ConsoleUi implements View {
     }
 
     @Override
+    public void sortByName() {
+        presenter.sortByName();
+        System.out.println("Записи отсортированы по имени.");
+        getInfoTree();
+    }
+
+    @Override
+    public void sortByAge() {
+        presenter.sortByAge();
+        System.out.println("Записи отсортированы по возрастанию.");
+        getInfoTree();
+    }
+
+    @Override
     public void finish() {
         System.out.println("Работа закончена.");
         flag = false;
